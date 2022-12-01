@@ -49,9 +49,9 @@ byte tensorArena[tensorArenaSize] __attribute__((aligned(16)));
 
 // array to map gesture index to a name
 const char* GESTURES[] = {
-  "punch",
-  "flex".
-  "giro"
+  "brazo_arriba",
+  "golpe_frontal",
+  "extension_izquierda"
 };
 
 #define NUM_GESTURES (sizeof(GESTURES) / sizeof(GESTURES[0]))
@@ -62,7 +62,7 @@ void setup() {
 
   // initialize the IMU
   if (!IMU.begin()) {
-    Serial.println("Failed to initialize IMU!");
+    Serial.println("Falla al inicializar IMU!");
     while (1);
   }
 
@@ -79,7 +79,7 @@ void setup() {
   // get the TFL representation of the model byte array
   tflModel = tflite::GetModel(model);
   if (tflModel->version() != TFLITE_SCHEMA_VERSION) {
-    Serial.println("Model schema mismatch!");
+    Serial.println("El esquema del modelo no concuerda con la version de TFLite");
     while (1);
   }
 
@@ -137,7 +137,7 @@ void loop() {
         // Run inferencing
         TfLiteStatus invokeStatus = tflInterpreter->Invoke();
         if (invokeStatus != kTfLiteOk) {
-          Serial.println("Invoke failed!");
+          Serial.println("Falla en la invocación");
           while (1);
           return;
         }
